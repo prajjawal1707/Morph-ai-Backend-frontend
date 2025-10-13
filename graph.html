@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MORPH-AI-ERA • Advanced Graphs</title>
+    <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        :root {
+            --bg: #0f1115;
+            --panel: #1b1f2a;
+            --panel-2: #111521;
+            --muted: #9aa4b2;
+            --text: #e7ecf3;
+            --brand: #1E90FF;
+            --border: #212735;
+            --radius: 14px;
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, Apple Color Emoji, Segoe UI Emoji;
+            padding: 24px;
+        }
+
+        .control-bar {
+            background: var(--panel-2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .control-bar label {
+            font-weight: 500;
+            color: var(--muted);
+        }
+
+        .control-bar select {
+            height: 38px;
+            border-radius: 10px;
+            border: 1px solid #263048;
+            background: #12192b;
+            color: #e6edf6;
+            padding: 0 12px;
+            font-size: 14px;
+            min-width: 250px;
+        }
+
+        #chartContainer {
+            background: var(--panel-2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            min-height: 75vh;
+            padding: 20px;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, .35);
+        }
+
+        /* Styles for non-Plotly charts like cards */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        .single-card, .multi-row-card {
+            background: var(--panel);
+            padding: 20px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+        }
+        .single-card .value { font-size: 36px; font-weight: 800; color: var(--brand); }
+        .single-card .label { font-size: 14px; color: var(--muted); margin-top: 8px; }
+        .multi-row-card .row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); }
+        .multi-row-card .row:last-child { border-bottom: none; }
+    </style>
+</head>
+
+<body>
+    <div class="control-bar">
+        <i class="fa-solid fa-chart-simple fa-lg" style="color: var(--brand);"></i>
+        <label for="chartTypeSelect">Select Chart Type:</label>
+        <select id="chartTypeSelect">
+            <optgroup label="Bar & Column">
+                <option value="bar-horizontal">Bar Chart (Horizontal)</option>
+                <option value="column-vertical">Column Chart (Vertical)</option>
+                <option value="clustered-column">Clustered Column Chart</option>
+                <option value="stacked-bar">Stacked Bar Chart</option>
+                <option value="stacked-column">Stacked Column Chart</option>
+            </optgroup>
+            <optgroup label="Line & Area">
+                <option value="line">Line Chart</option>
+                <option value="area">Area Chart</option>
+                <option value="stacked-area">Stacked Area Chart</option>
+            </optgroup>
+            <optgroup label="Proportional">
+                <option value="pie">Pie Chart</option>
+                <option value="donut">Donut Chart</option>
+                <option value="treemap">Tree Map</option>
+            </optgroup>
+            <optgroup label="Relational">
+                <option value="scatter">Scatter Chart</option>
+                <option value="bubble">Bubble Chart</option>
+            </optgroup>
+            <optgroup label="Specialized">
+                <option value="waterfall">Waterfall Chart</option>
+                <option value="funnel">Funnel Chart</option>
+                <option value="gauge">Gauge Chart</option>
+                <option value="combo">Combo (Line + Column)</option>
+            </optgroup>
+             <optgroup label="Data Display">
+                <option value="table">Table</option>
+                <option value="matrix">Matrix (Heatmap)</option>
+                <option value="cards-single">Cards (Single Metric)</option>
+                <option value="multi-row-card">Multi Row Card</option>
+            </optgroup>
+            <optgroup label="Geographical">
+                <option value="map-scatter">Map (Scatter Plot)</option>
+                <option value="map-filled">Filled Map (Choropleth)</option>
+            </optgroup>
+            <optgroup label="Hierarchical">
+                <option value="decomposition-tree">Decomposition Tree (Placeholder)</option>
+            </optgroup>
+        </select>
+    </div>
+
+    <div id="chartContainer"></div>
+
+    <script>
+        const chartContainer = document.getElementById('chartContainer');
+        const chartTypeSelect = document.getElementById('chartTypeSelect');
+
+        // --- MOCK DATA ---
+        // This sample data will be used to generate the charts.
+        const mockData = {
+            categories: ['Electronics', 'Furniture', 'Apparel', 'Books', 'Groceries'],
+            months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            sales: [150, 200, 180, 220, 250, 210],
+            profit: [20, 30, 25, 35, 40, 32],
+            units_sold: [50, 60, 55, 65, 70, 62],
+            series: {
+                sales_2024: [150, 200, 180, 220, 250, 210],
+                sales_2025: [170, 210, 190, 240, 260, 230],
+                profit_2024: [20, 30, 25, 35, 40, 32],
+                profit_2025: [25, 35, 28, 40, 45, 38],
+            },
+            locations: {
+                names: ["New York", "London", "Tokyo", "Sydney", "Mumbai"],
+                lats: [40.7128, 51.5074, 35.6895, -33.8688, 19.0760],
+                lons: [-74.0060, -0.1278, 139.6917, 151.2093, 72.8777],
+                values: [100, 85, 120, 70, 95]
+            }
+        };
+
+        const plotlyLayout = (title) => ({
+            title: { text: title, font: { size: 18, color: '#dbe7ff' } },
+            paper_bgcolor: 'transparent',
+            plot_bgcolor: 'transparent',
+            font: { color: '#e7ecf3' },
+            xaxis: { gridcolor: '#1d2738', zeroline: false },
+            yaxis: { gridcolor: '#1d2738', zeroline: false },
+            legend: { orientation: 'h', y: -0.2 }
+        });
+
+        // --- CHART DRAWING FUNCTIONS ---
+        function drawChart() {
+            const chartType = chartTypeSelect.value;
+            chartContainer.innerHTML = ''; // Clear previous chart
+            Plotly.purge(chartContainer);
+
+            switch (chartType) {
+                // Bar & Column
+                case 'bar-horizontal':
+                    Plotly.newPlot(chartContainer, [{ x: mockData.sales, y: mockData.categories, type: 'bar', orientation: 'h' }], plotlyLayout('Sales by Category'));
+                    break;
+                case 'column-vertical':
+                    Plotly.newPlot(chartContainer, [{ x: mockData.categories, y: mockData.sales, type: 'bar' }], plotlyLayout('Sales by Category'));
+                    break;
+                case 'clustered-column':
+                    Plotly.newPlot(chartContainer, [
+                        { x: mockData.months, y: mockData.series.sales_2024, name: '2024 Sales', type: 'bar' },
+                        { x: mockData.months, y: mockData.series.sales_2025, name: '2025 Sales', type: 'bar' }
+                    ], { ...plotlyLayout('Clustered Column Chart'), barmode: 'group' });
+                    break;
+                case 'stacked-bar':
+                    Plotly.newPlot(chartContainer, [
+                        { y: mockData.months, x: mockData.series.profit_2024, name: '2024 Profit', type: 'bar', orientation: 'h' },
+                        { y: mockData.months, x: mockData.series.profit_2025, name: '2025 Profit', type: 'bar', orientation: 'h' }
+                    ], { ...plotlyLayout('Stacked Bar Chart'), barmode: 'stack' });
+                    break;
+                case 'stacked-column':
+                    Plotly.newPlot(chartContainer, [
+                        { x: mockData.months, y: mockData.series.sales_2024, name: '2024 Sales', type: 'bar' },
+                        { x: mockData.months, y: mockData.series.sales_2025, name: '2025 Sales', type: 'bar' }
+                    ], { ...plotlyLayout('Stacked Column Chart'), barmode: 'stack' });
+                    break;
+
+                // Line & Area
+                case 'line':
+                    Plotly.newPlot(chartContainer, [{ x: mockData.months, y: mockData.sales, type: 'scatter', mode: 'lines+markers' }], plotlyLayout('Monthly Sales Trend'));
+                    break;
+                case 'area':
+                    Plotly.newPlot(chartContainer, [{ x: mockData.months, y: mockData.sales, type: 'scatter', fill: 'tozeroy' }], plotlyLayout('Monthly Sales Trend (Area)'));
+                    break;
+                case 'stacked-area':
+                     Plotly.newPlot(chartContainer, [
+                        { x: mockData.months, y: mockData.series.profit_2024, name: '2024 Profit', type: 'scatter', stackgroup: 'one' },
+                        { x: mockData.months, y: mockData.series.profit_2025, name: '2025 Profit', type: 'scatter', stackgroup: 'one' }
+                    ], plotlyLayout('Stacked Area Chart'));
+                    break;
+
+                // Proportional
+                case 'pie':
+                    Plotly.newPlot(chartContainer, [{ values: mockData.sales, labels: mockData.categories, type: 'pie' }], plotlyLayout('Sales Distribution'));
+                    break;
+                case 'donut':
+                    Plotly.newPlot(chartContainer, [{ values: mockData.sales, labels: mockData.categories, type: 'pie', hole: 0.4 }], plotlyLayout('Sales Distribution'));
+                    break;
+                case 'treemap':
+                     Plotly.newPlot(chartContainer, [{
+                        type: "treemap",
+                        labels: mockData.categories,
+                        parents: ["", "", "", "", ""],
+                        values:  mockData.sales,
+                    }], plotlyLayout('Sales by Category Treemap'));
+                    break;
+                
+                // Relational
+                case 'scatter':
+                    Plotly.newPlot(chartContainer, [{ x: mockData.sales, y: mockData.profit, mode: 'markers', type: 'scatter' }], plotlyLayout('Sales vs. Profit'));
+                    break;
+                case 'bubble':
+                    Plotly.newPlot(chartContainer, [{ x: mockData.sales, y: mockData.profit, mode: 'markers', marker: { size: mockData.units_sold } }], plotlyLayout('Sales vs. Profit (Bubble size by Units Sold)'));
+                    break;
+
+                // Specialized
+                case 'waterfall':
+                    Plotly.newPlot(chartContainer, [{
+                        type: 'waterfall',
+                        x: ["Start", "Revenue", "COGS", "Marketing", "Net"],
+                        measure: ["absolute", "relative", "relative", "relative", "total"],
+                        y: [100, 300, -120, -50, 0]
+                    }], plotlyLayout('Cash Flow Waterfall'));
+                    break;
+                case 'funnel':
+                    Plotly.newPlot(chartContainer, [{ type: 'funnel', y: ["Website Visits", "Downloads", "Signups", "Purchases"], x: [300, 200, 100, 50] }], plotlyLayout('Sales Funnel'));
+                    break;
+                case 'gauge':
+                    Plotly.newPlot(chartContainer, [{ type: 'indicator', mode: 'gauge+number', value: 85, gauge: { axis: { range: [null, 100] }, bar: { color: "dodgerblue" } } }], plotlyLayout('Customer Satisfaction'));
+                    break;
+                case 'combo':
+                     Plotly.newPlot(chartContainer, [
+                        { x: mockData.months, y: mockData.series.sales_2024, name: 'Sales', type: 'bar' },
+                        { x: mockData.months, y: mockData.series.profit_2024, name: 'Profit', type: 'scatter', mode: 'lines', yaxis: 'y2' }
+                    ], { ...plotlyLayout('Sales and Profit Combo Chart'), yaxis2: { overlaying: 'y', side: 'right' } });
+                    break;
+
+                // Data Display
+                 case 'table':
+                    Plotly.newPlot(chartContainer, [{
+                        type: 'table',
+                        header: { values: ["Month", "Sales", "Profit"] },
+                        cells: { values: [mockData.months, mockData.sales, mockData.profit] }
+                    }], plotlyLayout('Data Table'));
+                    break;
+                 case 'matrix':
+                    Plotly.newPlot(chartContainer, [{
+                        type: 'heatmap',
+                        z: [[1, 20, 30], [20, 1, 60], [30, 60, 1]],
+                        x: ['Feature A', 'Feature B', 'Feature C'],
+                        y: ['Feature A', 'Feature B', 'Feature C']
+                    }], plotlyLayout('Correlation Matrix (Heatmap)'));
+                    break;
+                case 'cards-single':
+                    chartContainer.innerHTML = `
+                        <div class="card-grid">
+                            <div class="single-card">
+                                <div class="value">${new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(mockData.sales.reduce((a, b) => a + b, 0))}</div>
+                                <div class="label">Total Sales</div>
+                            </div>
+                             <div class="single-card">
+                                <div class="value">${new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(mockData.profit.reduce((a, b) => a + b, 0))}</div>
+                                <div class="label">Total Profit</div>
+                            </div>
+                        </div>`;
+                    break;
+                case 'multi-row-card':
+                    chartContainer.innerHTML = `<div class="multi-row-card">
+                        ${mockData.categories.map((cat, i) => `<div class="row"><span>${cat}</span> <strong>${new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(mockData.sales[i])}</strong></div>`).join('')}
+                    </div>`;
+                    break;
+
+                // Geographical
+                case 'map-scatter':
+                     Plotly.newPlot(chartContainer, [{
+                        type: 'scattergeo',
+                        lat: mockData.locations.lats,
+                        lon: mockData.locations.lons,
+                        text: mockData.locations.names,
+                        marker: { size: mockData.locations.values.map(v => v / 5) }
+                    }], { ...plotlyLayout('Sales by Location'), geo: { bgcolor: 'transparent', scope: 'world' } });
+                    break;
+                case 'map-filled':
+                    chartContainer.innerHTML = `<p style="text-align: center; padding-top: 50px;">Filled Maps (Choropleth) require specific GeoJSON data and more complex setup. This is a placeholder.</p>`;
+                    break;
+                
+                // Placeholder for complex types
+                case 'decomposition-tree':
+                    chartContainer.innerHTML = `<p style="text-align: center; padding-top: 50px;">Decomposition Trees are highly specialized and not a standard Plotly chart. This would require a dedicated library or custom SVG implementation.</p>`;
+                    break;
+
+                default:
+                    chartContainer.innerHTML = `<p>Select a chart type to begin.</p>`;
+            }
+        }
+
+        // --- EVENT LISTENER ---
+        chartTypeSelect.addEventListener('change', drawChart);
+
+        // --- INITIAL DRAW ---
+        drawChart();
+
+    </script>
+</body>
+
+</html>

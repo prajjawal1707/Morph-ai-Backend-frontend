@@ -165,7 +165,6 @@
 
         .navbtn span {
             display: none;
-            white-space: nowrap;
         }
 
         .sidebar.expanded .navbtn span {
@@ -204,15 +203,6 @@
             text-decoration: underline;
         }
 
-        #mobile-toggle {
-            position: fixed;
-            top: 14px;
-            left: 10px;
-            z-index: 1001;
-            display: none;
-            /* Hidden by default */
-        }
-
 
         .main {
             flex: 1;
@@ -240,18 +230,6 @@
             /* Mobile: 1 column */
             gap: 18px;
             margin-bottom: 18px;
-        }
-
-        .card-controls {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .card-controls .select {
-            flex: 1;
-            height: 30px;
-            font-size: 12px;
         }
 
         .card {
@@ -413,58 +391,28 @@
                 grid-template-columns: repeat(4, 1fr);
             }
         }
-
-        /* Mobile specific sidebar */
-        @media (max-width: 768px) {
-            #mobile-toggle {
-                display: flex;
-            }
-
-            .wrap {
-                display: block;
-            }
-
-            .sidebar {
-                position: fixed;
-                width: 220px;
-                transform: translateX(-100%);
-                transition: transform 0.3s ease-in-out;
-                align-items: flex-start;
-            }
-
-            .sidebar.is-open {
-                transform: translateX(0);
-            }
-
-            .sidebar.is-open .brand span,
-            .sidebar.is-open .navbtn span {
-                display: inline;
-            }
-
-            .sidebar.is-open .auth-status {
-                display: block;
-            }
-        }
     </style>
 </head>
 
 <body>
-    <div id="mobile-toggle" class="brand">MAE</div>
     <div class="wrap">
 
         <!-- Sidebar -->
         <aside class="sidebar" id="sidebar">
             <div class="brand" id="toggleSidebar">MAE <span>MORPH-AI-ERA</span></div>
             <nav class="nav">
-                <a href="dashboard.html" class="navbtn"><i class="fa-solid fa-gauge-high"></i><span>Dashboard</span></a>
+                <button class="navbtn" data-page="dashboard"><i
+                        class="fa-solid fa-gauge-high"></i><span>Dashboard</span></button>
 
                 <a href="analytics.html" class="navbtn"><i class="fa-solid fa-chart-line"></i><span>Analytics</span></a>
                 <a href="history.html" class="navbtn"><i class="fa-regular fa-clock"></i><span>History</span></a>
             </nav>
             <div class="spacer"></div>
             <nav class="nav">
-                <a href="settings.html" class="navbtn"><i class="fa-solid fa-gear"></i><span>Settings</span></a>
-                <a href="profile.html" class="navbtn"><i class="fa-regular fa-user"></i><span>Profile</span>
+                <a href="settings.html" class="navbtn" style="text-decoration: none;"><i
+                        class="fa-solid fa-gear"></i><span>Settings</span></a>
+                <a href="profile.html" class="navbtn" style="text-decoration: none;"><i
+                        class="fa-regular fa-user"></i><span>Profile</span>
                 </a>
             </nav>
 
@@ -483,74 +431,31 @@
 
             <section class="metrics">
                 <div class="card">
-                    <div class="card-controls">
-                        <select class="select card-metric-select" id="metric-1"></select>
-                        <select class="select card-agg-select" id="agg-1">
-                            <option value="sum">Total</option>
-                            <option value="mean">Average</option>
-                            <option value="max">Max</option>
-                            <option value="min">Min</option>
-                            <option value="count">Count</option>
-                        </select>
-                    </div>
-                    <div class="metric-label" id="label-1"></div>
-                    <div class="metric-val" id="val-1"></div>
+                    <div class="metric-label">Total Sales</div>
+                    <div id="m-total" class="metric-val">$0</div>
                 </div>
                 <div class="card">
-                    <div class="card-controls">
-                        <select class="select card-metric-select" id="metric-2"></select>
-                        <select class="select card-agg-select" id="agg-2">
-                            <option value="mean">Average</option>
-                            <option value="sum">Total</option>
-                            <option value="max">Max</option>
-                            <option value="min">Min</option>
-                            <option value="count">Count</option>
-                        </select>
-                    </div>
-                    <div class="metric-label" id="label-2"></div>
-                    <div class="metric-val" id="val-2"></div>
+                    <div class="metric-label">Average Profit</div>
+                    <div id="m-avg" class="metric-val">$0</div>
                 </div>
                 <div class="card">
-                    <div class="card-controls">
-                        <select class="select card-metric-select" id="metric-3"></select>
-                        <select class="select card-agg-select" id="agg-3">
-                            <option value="max">Max</option>
-                            <option value="min">Min</option>
-                            <option value="sum">Total</option>
-                            <option value="mean">Average</option>
-                            <option value="count">Count</option>
-                        </select>
-                    </div>
-                    <div class="metric-label" id="label-3"></div>
-                    <div class="metric-val" id="val-3"></div>
+                    <div class="metric-label">Max Profit</div>
+                    <div id="m-max" class="metric-val">$0</div>
                 </div>
                 <div class="card">
-                    <div class="card-controls">
-                        <select class="select card-metric-select" id="metric-4"></select>
-                        <select class="select card-agg-select" id="agg-4">
-                            <option value="min">Min</option>
-                            <option value="max">Max</option>
-                            <option value="sum">Total</option>
-                            <option value="mean">Average</option>
-                            <option value="count">Count</option>
-                        </select>
-                    </div>
-                    <div class="metric-label" id="label-4"></div>
-                    <div class="metric-val" id="val-4"></div>
+                    <div class="metric-label">Min Profit</div>
+                    <div id="m-min" class="metric-val">$0</div>
                 </div>
             </section>
 
             <section class="bar">
-                <div class="group"><span class="label">Upload</span><label for="fileInput" class="file-label"><i
-                            class="fa-solid fa-file-arrow-up"></i> File</label><input id="fileInput" type="file"
-                        accept=".csv" /></div>
-                <div class="group"><span class="label">Views</span><select id="load-view" class="select">
-                        <option value="">Load View</option>
-                    </select><button id="save-view" class="btn">Save View</button></div>
-                <div style="flex:1"></div>
-                <div class="group" id="filter-status" style="display:none;"><span class="label">Filters
-                        Active!</span><button id="clear-filters" class="btn">Clear Filters</button></div>
-                <div class="group"><button id="calc-running-total" class="btn">Running Total</button></div>
+                <div class="group">
+                    <span class="label">Upload CSV</span>
+                    <label for="fileInput" class="file-label"><i class="fa-solid fa-file-arrow-up"></i> Choose
+                        File</label>
+                    <input id="fileInput" type="file" accept=".csv" />
+                </div>
+                <div style="flex:1"></div> <!-- Spacer -->
                 <div class="group">
                     <button id="btnUpdate" class="btn primary"><i class="fa-solid fa-rotate"></i>&nbsp;Update
                         Chart</button>
@@ -661,7 +566,8 @@
                     <div id="profit-trend" class="plot"></div>
                 </div>
                 <div class="card panel">
-                    <div class="head"><span>Sales vs Profit (Overlay)</span>
+                    <div class="head">
+                        <span>Sales vs Profit (Overlay)</span>
                         <div class="controls">
                             <select id="ovl-type-a" class="select">
                                 <option value="bar">Bar (Sales)</option>
@@ -671,16 +577,15 @@
                                 <option value="line">Line (Profit)</option>
                                 <option value="bar">Bar (Profit)</option>
                             </select>
-                            <i class="fa-solid fa-expand expand-btn" data-plot="overlay-plot"></i>
                         </div>
                     </div>
                     <div id="overlay-plot" class="plot"></div>
                 </div>
                 <div class="card panel">
-                    <div class="head"><span>Sales vs Profit (Scatter)</span>
+                    <div class="head">
+                        <span>Sales vs Profit (Scatter)</span>
                         <div class="controls">
                             <button id="sc-refresh" class="btn"><i class="fa-solid fa-arrows-rotate"></i></button>
-                            <i class="fa-solid fa-expand expand-btn" data-plot="scatter-plot"></i>
                         </div>
                     </div>
                     <div id="scatter-plot" class="plot"></div>
@@ -690,73 +595,51 @@
     </div>
 
     <script>
-        // --- Sidebar, Auth & General Setup ---
-        const $ = q => document.querySelector(q);
-        const $$ = q => document.querySelectorAll(q);
+        // --- Sidebar Logic ---
+        const sidebar = document.getElementById("sidebar");
+        const toggleSidebar = document.getElementById("toggleSidebar");
+        const mainContent = document.getElementById("main-content");
 
-        function setupSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const desktopToggle = document.getElementById('toggleSidebar');
-            const mobileToggle = document.getElementById('mobile-toggle');
+        toggleSidebar.addEventListener("click", () => {
+            sidebar.classList.toggle("expanded");
+        });
 
-            desktopToggle.addEventListener('click', () => {
-                if (window.innerWidth > 768) {
-                    sidebar.classList.toggle('expanded');
-                } else {
-                    sidebar.classList.remove('is-open');
+        document.querySelectorAll(".navbtn[data-page]").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                e.preventDefault();
+                const page = btn.getAttribute("data-page");
+                if (page) {
+                    mainContent.innerHTML = `<div style="text-align:center; padding-top:100px; font-size: 1.5rem; color: var(--muted);">⚡ ${page.toUpperCase()} page is not available in this demo.</div>`;
                 }
             });
+        });
 
-            mobileToggle.addEventListener('click', () => {
-                sidebar.classList.toggle('is-open');
-            });
-
-            document.addEventListener('click', (e) => {
-                if (window.innerWidth <= 768 && sidebar.classList.contains('is-open')) {
-                    if (!sidebar.contains(e.target) && e.target !== mobileToggle) {
-                        sidebar.classList.remove('is-open');
-                    }
-                }
-            });
-
-            sidebar.querySelectorAll('.navbtn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    if (window.innerWidth <= 768) {
-                        sidebar.classList.remove('is-open');
-                    }
-                });
-            });
-        }
+        // --- Auth Logic (Simulated) ---
         function checkLoginStatus() {
+            // This is a simulated check. In a real application, this would fetch from a server.
             const authLinksDiv = document.getElementById('authLinks');
             const userStatusP = document.getElementById('userStatus');
+
+            // Default to guest state to prevent errors
             const isLoggedIn = false;
             const username = "DemoUser";
 
             if (isLoggedIn) {
                 userStatusP.textContent = `Logged in as: ${username}`;
-                authLinksDiv.innerHTML = `<a href="#">Log Out</a>`;
+                authLinksDiv.innerHTML = `<a href="/logout">Log Out</a>`;
             } else {
                 userStatusP.textContent = 'Using as: Guest';
                 authLinksDiv.innerHTML = `<a href="/login.html">Login</a> <a href="/signup.html">Sign Up</a>`;
             }
         }
 
-        // --- Data & History Management ---
+        // --- Graphing & Dashboard Logic ---
+        const $ = (q) => document.querySelector(q);
+        const $$ = (q) => document.querySelectorAll(q);
         let DATASET = [];
         let HEADERS = [];
         let AVAILABLE_METRICS = { numeric: [], categorical: [] };
 
-        function logHistory(action, details) {
-            try {
-                const history = JSON.parse(localStorage.getItem('dashboardHistory')) || [];
-                const user = "guest-user"; // Replace with real user logic
-                history.unshift({ timestamp: new Date().toISOString(), user, action, details, csv: localStorage.getItem('lastCSV') || '' });
-                localStorage.setItem('dashboardHistory', JSON.stringify(history.slice(0, 50))); // Keep last 50 entries
-            } catch (e) { console.error("Could not log history:", e); }
-        }
-
-        // --- Data Loading & Parsing ---
         function parseCSV(text) {
             const lines = text.trim().split(/\r\n|\n/);
             HEADERS = lines[0].split(',').map(h => h.trim());
@@ -769,62 +652,34 @@
                 });
                 return obj;
             });
-            // Save data for analytics page
-            localStorage.setItem('dashboardData', JSON.stringify({ headers: HEADERS, data: DATASET }));
-            localStorage.setItem('lastCSV', text); // Save raw CSV for history
         }
 
+        function loadSummary() {
+            if (DATASET.length === 0) return;
+            const sales = DATASET.map(row => row.Sales || 0);
+            const profits = DATASET.map(row => row.Profit || 0);
+            const totalSales = sales.reduce((a, b) => a + b, 0);
+            const avgProfit = profits.length > 0 ? profits.reduce((a, b) => a + b, 0) / profits.length : 0;
+            const maxProfit = profits.length > 0 ? Math.max(...profits) : 0;
+            const minProfit = profits.length > 0 ? Math.min(...profits) : 0;
+            $('#m-total').textContent = '$' + totalSales.toLocaleString();
+            $('#m-avg').textContent = '$' + avgProfit.toLocaleString(undefined, { maximumFractionDigits: 2 });
+            $('#m-max').textContent = '$' + maxProfit.toLocaleString();
+            $('#m-min').textContent = '$' + minProfit.toLocaleString();
+            AVAILABLE_METRICS.numeric = HEADERS.filter(h => h && typeof DATASET[0][h] === 'number');
+            AVAILABLE_METRICS.categorical = HEADERS.filter(h => h && typeof DATASET[0][h] === 'string');
 
+            const numericOptions = AVAILABLE_METRICS.numeric.map(c => `<option value="${c}">${c}</option>`).join('');
+            const categoricalOptions = AVAILABLE_METRICS.categorical.map(c => `<option value="${c}">${c}</option>`).join('');
+            const allMetricOptions = `<optgroup label="Categorical">${categoricalOptions}</optgroup><optgroup label="Numeric">${numericOptions}</optgroup>`;
 
+            $('#u-metric').innerHTML = allMetricOptions;
+            $('#st-metric').innerHTML = allMetricOptions;
+            $('#pt-metric').innerHTML = allMetricOptions;
 
-
-        function updateCards() {
-            for (let i = 1; i <= 4; i++) {
-                const metric = $(`#metric-${i}`).value;
-                const agg = $(`#agg-${i}`).value;
-                if (!metric) continue;
-
-                const values = DATASET.map(row => row[metric]).filter(v => typeof v === 'number');
-                if (values.length === 0) continue;
-
-                let result = 0;
-                switch (agg) {
-                    case 'sum': result = values.reduce((a, b) => a + b, 0); break;
-                    case 'mean': result = values.reduce((a, b) => a + b, 0) / values.length; break;
-                    case 'max': result = Math.max(...values); break;
-                    case 'min': result = Math.min(...values); break;
-                    case 'count': result = values.length; break;
-                }
-
-                let formattedResult = result.toLocaleString(undefined, { maximumFractionDigits: 2 });
-                if (metric.toLowerCase().includes('sales') || metric.toLowerCase().includes('profit')) {
-                    formattedResult = '$' + formattedResult;
-                }
-
-                $(`#label-${i}`).textContent = `${agg.charAt(0).toUpperCase() + agg.slice(1)} ${metric}`;
-                $(`#val-${i}`).textContent = formattedResult;
-            }
-            logHistory("Update Cards", "Manually refreshed KPI cards");
+            if (HEADERS.includes('Sales')) $('#st-metric').value = 'Sales';
+            if (HEADERS.includes('Profit')) $('#pt-metric').value = 'Profit';
         }
-
-
-
-
-
-
-        // --- Analytics & Drawing Functions ---
-        const plotlyLayout = (title, extra_settings = {}) => ({
-            title: { text: title, font: { size: 16, color: '#dbe7ff' } },
-            paper_bgcolor: 'transparent',
-            plot_bgcolor: 'transparent',
-            margin: { l: 50, r: 25, t: 40, b: 40 },
-            xaxis: { gridcolor: '#1d2738', zeroline: false, tickfont: { color: '#b9c7dd' } },
-            yaxis: { gridcolor: '#1d2738', zeroline: false, tickfont: { color: '#b9c7dd' } },
-            showlegend: true,
-            legend: { orientation: 'h', y: -0.25, font: { color: '#cbd6ea' } },
-            ...extra_settings
-        });
-        const showPlotMessage = (plotId, message) => $(`#${plotId}`).innerHTML = `<div style="display:flex; align-items:center; justify-content:center; height:100%; color:var(--muted); padding: 20px; text-align: center;">${message}</div>`;
 
         function getSeries(metric) {
             if (AVAILABLE_METRICS.categorical.includes(metric)) {
@@ -839,121 +694,40 @@
                 return { labels: Object.keys(aggregation), values: Object.values(aggregation) };
             } else {
                 const labelCol = AVAILABLE_METRICS.categorical[0] || HEADERS[0];
-                return { labels: DATASET.map(row => row[labelCol]), values: DATASET.map(row => row[metric]) };
+                return {
+                    labels: DATASET.map(row => row[labelCol]),
+                    values: DATASET.map(row => row[metric])
+                };
             }
         }
-        // function generateTracesAndLayout(type, metric) {
-        //     if (!metric) { return { error: 'Please select a metric.' }; }
-        //     let traces = [];
-        //     let layout = plotlyLayout(metric);
-        //     try {
-        //         switch (type) {
-        //             case 'line': case 'bar': case 'area': {
-        //                 const { labels, values } = getSeries(metric);
-        //                 if (type === 'area') {
-        //                     traces.push({ type: 'scatter', x: labels, y: values, name: metric, mode: 'lines', fill: 'tozeroy' });
-        //                 } else {
-        //                     traces.push({ type: type, x: labels, y: values, name: metric });
-        //                 }
-        //                 break;
-        //             }
-        //             case 'bar-h': {
-        //                 const { labels, values } = getSeries(metric);
-        //                 traces.push({ type: 'bar', x: values, y: labels, orientation: 'h', name: metric });
-        //                 break;
-        //             }
-        //             case 'stacked-bar':
-        //             case 'stacked-area': case 'clustered-column': case 'stacked-column': {
-        //                 if (!HEADERS.includes('Sales') || !HEADERS.includes('Profit')) { return { error: 'This chart requires "Sales" and "Profit" columns.' }; }
-        //                 const sales = getSeries('Sales'); const profit = getSeries('Profit');
-        //                 if (type === 'stacked-area') {
-        //                     traces.push({ type: 'scatter', x: sales.labels, y: sales.values, name: 'Sales', fill: 'tozeroy', mode: 'none' });
-        //                     traces.push({ type: 'scatter', x: profit.labels, y: profit.values, name: 'Profit', fill: 'tonexty', mode: 'none' });
-        //                 } else {
-        //                     traces.push({ type: 'bar', x: sales.labels, y: sales.values, name: 'Sales' });
-        //                     traces.push({ type: 'bar', x: profit.labels, y: profit.values, name: 'Profit' });
-        //                     layout.barmode = type.includes('stack') ? 'stack' : 'group';
-        //                     if (type === 'stacked-bar') { traces.forEach(t => t.orientation = 'h'); }
-        //                 }
-        //                 break;
-        //             }
-        //             case 'pie': case 'donut': {
-        //                 const { labels, values } = getSeries(metric);
-        //                 traces.push({ type: 'pie', labels, values, hole: type === 'donut' ? 0.5 : 0, textinfo: 'percent', insidetextorientation: 'radial' });
-        //                 break;
-        //             }
-        //             case 'scatter': case 'bubble': {
-        //                 if (!HEADERS.includes('Sales') || !HEADERS.includes('Profit')) { return { error: 'Requires "Sales" and "Profit" columns.' }; }
-        //                 const sales = getSeries('Sales'); const profit = getSeries('Profit');
-        //                 const bubbleSizes = type === 'bubble' ? profit.values.map(p => Math.max(Math.abs(p) / 50, 10)) : 12;
-        //                 traces.push({ type: 'scatter', x: sales.values, y: profit.values, mode: 'markers', marker: { size: bubbleSizes, color: profit.values, colorscale: 'Viridis', showscale: true } });
-        //                 layout.xaxis.title = 'Sales'; layout.yaxis.title = 'Profit';
-        //                 break;
-        //             }
-        //             case 'box': case 'violin': {
-        //                 const { values } = getSeries(metric);
-        //                 traces.push({ y: values, type: type, name: metric });
-        //                 break;
-        //             }
-        //             case 'treemap': case 'sunburst': {
-        //                 const cat1 = AVAILABLE_METRICS.categorical[0];
-        //                 const cat2 = AVAILABLE_METRICS.categorical[1];
-        //                 if (!cat1 || !cat2) { return { error: 'This chart requires at least two categorical columns.' }; }
 
-        //                 const hierarchy = DATASET.reduce((acc, row) => {
-        //                     const parent = row[cat1]; const child = row[cat2]; const value = row.Sales || 0;
-        //                     if (!acc[parent]) acc[parent] = { children: {}, total: 0 };
-        //                     acc[parent].children[child] = (acc[parent].children[child] || 0) + value;
-        //                     acc[parent].total += value;
-        //                     return acc;
-        //                 }, {});
+        $('#fileInput').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                parseCSV(event.target.result);
+                refreshAll();
+            };
+            reader.onerror = () => alert('Error reading file.');
+            reader.readAsText(file);
+        });
 
-        //                 const labels = ['Total']; const parents = [''];
-        //                 const values = [Object.values(hierarchy).reduce((sum, p) => sum + p.total, 0)];
+        const plotlyLayout = (title, extra_settings = {}) => ({
+            title: { text: title, font: { size: 16, color: '#dbe7ff' } },
+            paper_bgcolor: 'transparent',
+            plot_bgcolor: 'transparent',
+            margin: { l: 50, r: 25, t: 40, b: 40 },
+            xaxis: { gridcolor: '#1d2738', zeroline: false, tickfont: { color: '#b9c7dd' } },
+            yaxis: { gridcolor: '#1d2738', zeroline: false, tickfont: { color: '#b9c7dd' } },
+            showlegend: true,
+            legend: { orientation: 'h', y: -0.25, font: { color: '#cbd6ea' } },
+            ...extra_settings
+        });
 
-        //                 for (const parent in hierarchy) {
-        //                     labels.push(parent); parents.push('Total'); values.push(hierarchy[parent].total);
-        //                     for (const child in hierarchy[parent].children) {
-        //                         labels.push(child); parents.push(parent); values.push(hierarchy[parent].children[child]);
-        //                     }
-        //                 }
-        //                 traces.push({ type: type, labels, parents, values, branchvalues: 'total' });
-        //                 break;
-        //             }
-        //             case 'heatmap': {
-        //                 const cat1 = AVAILABLE_METRICS.categorical[0];
-        //                 const cat2 = AVAILABLE_METRICS.categorical[1];
-        //                 if (!cat1 || !cat2) { return { error: 'Heatmap requires at least two categorical columns.' }; }
-        //                 const xLabels = [...new Set(DATASET.map(r => r[cat1]))];
-        //                 const yLabels = [...new Set(DATASET.map(r => r[cat2]))];
-        //                 const zValues = yLabels.map(y => xLabels.map(x => {
-        //                     const filtered = DATASET.filter(r => r[cat1] === x && r[cat2] === y);
-        //                     return filtered.reduce((sum, r) => sum + (r[metric] || 0), 0);
-        //                 }));
-        //                 traces.push({ x: xLabels, y: yLabels, z: zValues, type: 'heatmap', colorscale: 'Viridis' });
-        //                 break;
-        //             }
-        //             case 'choropleth': { return { error: `Map charts require specific geographical data (e.g., country codes) which was not found.` }; }
-        //             case 'decomposition-tree': { return { error: `Decomposition Tree is a placeholder for a complex custom visual.` }; }
-        //             case 'waterfall': case 'funnel': case 'gauge': {
-        //                 return { error: `The "${type}" chart requires specific data structures. This is a placeholder visual.` };
-        //             }
-        //             case 'combo': {
-        //                 if (!HEADERS.includes('Sales') || !HEADERS.includes('Profit')) { return { error: 'Combo chart requires "Sales" and "Profit" columns.' }; }
-        //                 const sales = getSeries('Sales'); const profit = getSeries('Profit');
-        //                 traces.push({ type: 'bar', x: sales.labels, y: sales.values, name: 'Sales' });
-        //                 traces.push({ type: 'scatter', mode: 'lines', x: profit.labels, y: profit.values, name: 'Profit', yaxis: 'y2' });
-        //                 layout.yaxis2 = { title: 'Profit', overlaying: 'y', side: 'right', showgrid: false, tickfont: { color: '#ff7f0e' } };
-        //                 break;
-        //             }
-        //             default: return { error: `Chart type "${type}" is not implemented.` };
-        //         }
-        //         return { traces, layout };
-        //     } catch (err) {
-        //         console.error(`Failed to generate chart type "${type}":`, err);
-        //         return { error: `Could not draw chart. The data might be in an incompatible format.` };
-        //     }
-        // }
+        const showPlotMessage = (plotId, message) => {
+            $(`#${plotId}`).innerHTML = `<div style="display:flex; align-items:center; justify-content:center; height:100%; color:var(--muted); padding: 20px; text-align: center;">${message}</div>`;
+        };
 
         function generateTracesAndLayout(type, metric) {
             if (!metric) { return { error: 'Please select a metric.' }; }
@@ -970,11 +744,6 @@
                         }
                         break;
                     }
-                    case 'bar-h': {
-                        const { labels, values } = getSeries(metric);
-                        traces.push({ type: 'bar', x: values, y: labels, orientation: 'h', name: metric });
-                        break;
-                    }
                     case 'stacked-bar':
                     case 'stacked-area': case 'clustered-column': case 'stacked-column': {
                         if (!HEADERS.includes('Sales') || !HEADERS.includes('Profit')) { return { error: 'This chart requires "Sales" and "Profit" columns.' }; }
@@ -986,7 +755,7 @@
                             traces.push({ type: 'bar', x: sales.labels, y: sales.values, name: 'Sales' });
                             traces.push({ type: 'bar', x: profit.labels, y: profit.values, name: 'Profit' });
                             layout.barmode = type.includes('stack') ? 'stack' : 'group';
-                            if (type === 'stacked-bar') { traces.forEach(t => t.orientation = 'h'); }
+                            if (type === 'stacked-bar') { traces.forEach(t => { t.y = [t.name]; t.x = [t.y.reduce((a, b) => a + b, 0)]; t.orientation = 'h'; }); } // Simplified for example
                         }
                         break;
                     }
@@ -1068,7 +837,6 @@
             }
         }
 
-
         function drawChart(plotId, type, metric) {
             const { traces, layout, error } = generateTracesAndLayout(type, metric);
             if (error) {
@@ -1082,56 +850,21 @@
                     const placeholderTrace = { type: chartType, ...staticData[chartType], mode: chartType === 'gauge' ? 'gauge+number' : undefined };
                     Plotly.react(plotId, [placeholderTrace], plotlyLayout(metric), { responsive: true, displayModeBar: false });
                     showPlotMessage(plotId, error);
-                } else { showPlotMessage(plotId, error); }
+                } else {
+                    showPlotMessage(plotId, error);
+                }
                 return;
             }
-            if (plotId !== 'main-plot') { layout.title.text = ''; }
+            if (plotId !== 'main-plot') {
+                layout.title.text = ''; // Clear title for grid plots
+            }
             Plotly.react(plotId, traces, layout, { responsive: true, displayModeBar: false });
         }
 
-        // --- UI & Control Functions ---
-        function loadSummary() {
-            if (DATASET.length === 0) return;
-            const sales = DATASET.map(row => row.Sales || 0);
-            const profits = DATASET.map(row => row.Profit || 0);
-            $('#m-total').textContent = '$' + sales.reduce((a, b) => a + b, 0).toLocaleString();
-            $('#m-avg').textContent = '$' + (profits.length > 0 ? (profits.reduce((a, b) => a + b, 0) / profits.length).toLocaleString(undefined, { maximumFractionDigits: 2 }) : 0);
-            $('#m-max').textContent = '$' + (profits.length > 0 ? Math.max(...profits).toLocaleString() : 0);
-            $('#m-min').textContent = '$' + (profits.length > 0 ? Math.min(...profits).toLocaleString() : 0);
-            logHistory("Calculate Metrics", "Recalculated summary KPIs");
-        }
-
-        function populateControls() {
-            AVAILABLE_METRICS.numeric = HEADERS.filter(h => h && DATASET.length > 0 && typeof DATASET[0][h] === 'number');
-            AVAILABLE_METRICS.categorical = HEADERS.filter(h => h && DATASET.length > 0 && typeof DATASET[0][h] === 'string');
-            const numericOptions = AVAILABLE_METRICS.numeric.map(c => `<option value="${c}">${c}</option>`).join('');
-            const categoricalOptions = AVAILABLE_METRICS.categorical.map(c => `<option value="${c}">${c}</option>`).join('');
-            const allMetricOptions = `<optgroup label="Categorical">${categoricalOptions}</optgroup><optgroup label="Numeric">${numericOptions}</optgroup>`;
-
-            $('#u-metric').innerHTML = allMetricOptions;
-            $('#st-metric').innerHTML = allMetricOptions;
-            $('#pt-metric').innerHTML = allMetricOptions;
-
-            // This part is new:
-            $$('.card-metric-select').forEach(sel => sel.innerHTML = numericOptions);
-
-            // Set defaults
-            if (HEADERS.includes('Sales')) $('#metric-1').value = 'Sales';
-            if (HEADERS.includes('Profit')) {
-                $('#metric-2').value = 'Profit';
-                $('#metric-3').value = 'Profit';
-                $('#metric-4').value = 'Profit';
-            }
-            if (HEADERS.includes('Sales')) $('#st-metric').value = 'Sales';
-            if (HEADERS.includes('Profit')) $('#pt-metric').value = 'Profit';
-        }
-
-        function drawMain() {
-            drawChart('main-plot', $('#u-type').value, $('#u-metric').value);
-            logHistory("Update Chart", `Main chart to ${$('#u-type').value} for ${$('#u-metric').value}`);
-        }
+        function drawMain() { drawChart('main-plot', $('#u-type').value, $('#u-metric').value); }
         function drawSalesTrend() { drawChart('sales-trend', $('#st-type').value, $('#st-metric').value); }
         function drawProfitTrend() { drawChart('profit-trend', $('#pt-type').value, $('#pt-metric').value); }
+
         function drawOverlay() {
             if (!HEADERS.includes('Sales') || !HEADERS.includes('Profit')) { showPlotMessage('overlay-plot', '"Sales" & "Profit" required.'); return; }
             const typeA = $('#ovl-type-a').value.split(' ')[0].toLowerCase();
@@ -1146,14 +879,13 @@
             if (!HEADERS.includes('Sales') || !HEADERS.includes('Profit')) { showPlotMessage('scatter-plot', '"Sales" & "Profit" required.'); return; }
             const { traces, layout } = generateTracesAndLayout('scatter', 'Sales');
             if (traces) {
-                layout.title.text = '';
+                layout.title.text = ''; // Clear title for grid view
                 Plotly.react('scatter-plot', traces, layout, { responsive: true, displayModeBar: false });
             }
         }
 
         function refreshAll() {
-            populateControls();
-            updateCards(); // Changed from loadSummary()
+            loadSummary();
             drawMain();
             drawSalesTrend();
             drawProfitTrend();
@@ -1161,54 +893,37 @@
             drawScatter();
         }
 
+        // --- Event Listeners ---
+        $('#u-type').addEventListener('change', drawMain);
+        $('#u-metric').addEventListener('change', drawMain);
+        $('#btnUpdate').addEventListener('click', drawMain);
+        $('#btnCalc').addEventListener('click', loadSummary);
+
+        $('#st-type').addEventListener('change', drawSalesTrend);
+        $('#st-metric').addEventListener('change', drawSalesTrend);
+        $('#pt-type').addEventListener('change', drawProfitTrend);
+        $('#pt-metric').addEventListener('change', drawProfitTrend);
+        $$('#ovl-type-a, #ovl-type-b').forEach(el => el.addEventListener('change', drawOverlay));
+        $('#sc-refresh').addEventListener('click', drawScatter);
+
         // --- Initial Load ---
         (function () {
-            setupSidebar();
+            // Check login status first
             checkLoginStatus();
 
-            $('#fileInput').addEventListener('change', (e) => {
-                const file = e.target.files[0];
-                if (!file) return;
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    const csvText = event.target.result;
-                    parseCSV(csvText);
-                    logHistory("File Upload", `Uploaded ${file.name}`);
-                    refreshAll();
-                };
-                reader.onerror = () => alert('Error reading file.');
-                reader.readAsText(file);
-            });
-
-            // Event Listeners
-            $('#btnUpdate').addEventListener('click', drawMain);
-            $('#btnCalc').addEventListener('click', loadSummary);
-            $$('#u-type, #u-metric').forEach(el => el.addEventListener('change', drawMain));
-            $$('#st-type, #st-metric').forEach(el => el.addEventListener('change', drawSalesTrend));
-            $$('#pt-type, #pt-metric').forEach(el => el.addEventListener('change', drawProfitTrend));
-            $$('#ovl-type-a, #ovl-type-b').forEach(el => el.addEventListener('change', drawOverlay));
-            $('#sc-refresh').addEventListener('click', drawScatter);
-
-
-            // This listener was added:
-            $$('.card-metric-select, .card-agg-select').forEach(el => el.addEventListener('change', updateCards));
-
-            // And the listener for the "Calculate Metrics" button was changed to this:
-            $('#btnCalc').addEventListener('click', updateCards);
-
-
-
-            const defaultCSV = `Date,Region,Product,Sales,Profit,Units_Sold\n2023-01-15,North,Widgets,1500,300,15\n2024-01-20,North,Gadgets,1100,180,22\n2023-02-10,South,Widgets,2200,450,22\n2024-03-12,West,Widgets,1950,400,18`;
+            const defaultCSV = `Date,Region,Product,Sales,Profit
+2023-01-15,North,Widgets,1500,300
+2023-01-20,North,Gadgets,900,150
+2023-02-10,South,Widgets,2200,450
+2023-02-18,South,Gizmos,1800,320
+2023-03-05,North,Gadgets,1300,220
+2023-03-12,West,Widgets,1750,350
+2023-04-21,West,Gizmos,2100,410
+2023-04-28,East,Gadgets,1100,180`;
             parseCSV(defaultCSV);
             refreshAll();
         })();
     </script>
-
-    <div id="focus-modal" class="modal">
-    <div class="modal-content"><span id="close-modal" class="close-btn">&times;</span>
-        <div id="focus-plot"></div>
-    </div>
-</div>
 </body>
 
 </html>

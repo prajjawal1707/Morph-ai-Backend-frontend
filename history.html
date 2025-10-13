@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MORPH-AI-ERA • History</title>
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <style>
+        /* This defines the light theme variables. */
+        .light-mode {
+            --bg: #f8f9fa;
+            --panel: #ffffff;
+            --panel-2: #f1f3f5;
+            --muted: #6c757d;
+            --text: #212529;
+            --brand: #1E90FF;
+            --border: #dee2e6;
+            --input-bg: #f1f3f5;
+            --danger: #ef4444;
+            --success: #28a745;
+            --card-shadow: 0 4px 20px rgba(0, 0, 0, .08);
+            --toast-bg: #212529;
+            --toast-text: #ffffff;
+        }
+    </style>
+    <script>
+        // This script runs instantly to apply the saved theme without a flicker.
+        (function () {
+            const theme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+            if (theme === 'light') {
+                document.documentElement.classList.add('light-mode');
+            }
+        })();
+    </script>
+
+    <style>
+        :root {
+            --bg: #0f1115;
+            --panel: #1b1f2a;
+            --panel-2: #111521;
+            --muted: #9aa4b2;
+            --text: #e7ecf3;
+            --brand: #1E90FF;
+            --ok: #28a745;
+            --warn: #f59e0b;
+            --danger: #ef4444;
+            --chip: #0d1320;
+            --chip-border: #293245;
+            --card-shadow: 0 8px 28px rgba(0, 0, 0, .35);
+            --radius: 14px;
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        html,
+        body {
+            height: 100%
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, Apple Color Emoji, Segoe UI Emoji;
+        }
+
+        /* ===== Shell ===== */
+        .wrap {
+            display: flex;
+            min-height: 100dvh;
+        }
+
+        /* ===== Sidebar ===== */
+        .sidebar {
+            position: sticky;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 70px;
+            background: var(--panel-2);
+            border-right: 1px solid #202533;
+            padding: 14px 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: width 0.25s ease;
+            overflow: hidden;
+            z-index: 10;
+        }
+
+        .sidebar.expanded {
+            width: 220px;
+            align-items: flex-start;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 44px;
+            /* Changed from width */
+            height: 44px;
+            border-radius: 12px;
+            background: #0c1a33;
+            border: 1px solid #1b2a44;
+            color: var(--brand);
+            font-weight: 700;
+            margin-bottom: 20px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .brand span {
+            margin-left: 10px;
+            font-size: 18px;
+            font-weight: 700;
+            white-space: nowrap;
+            display: none;
+        }
+
+        .sidebar.expanded .brand span {
+            display: inline;
+        }
+
+        .sidebar .spacer {
+            flex-grow: 1;
+        }
+
+        .nav {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+            flex-shrink: 0;
+        }
+
+        .navbtn {
+            width: 100%;
+            height: 44px;
+            border-radius: 12px;
+            border: 1px solid #1e2534;
+            background: #0e1422;
+            color: #a9b3c3;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 12px;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            text-decoration: none;
+            /* For anchor tags */
+        }
+
+        .navbtn:hover {
+            background: #1c2637;
+            color: #fff;
+        }
+
+        .navbtn span {
+            display: none;
+            white-space: nowrap;
+        }
+
+        .sidebar.expanded .navbtn span {
+            display: inline;
+        }
+
+        .auth-status {
+            display: none;
+            /* Hidden when sidebar is collapsed */
+            padding: 15px;
+            margin-top: 15px;
+            border-top: 1px solid #202533;
+        }
+
+        .sidebar.expanded .auth-status {
+            display: block;
+        }
+
+        #userStatus {
+            font-size: 13px;
+            color: var(--muted);
+            margin: 0 0 10px 0;
+            white-space: nowrap;
+        }
+
+        #authLinks a {
+            color: var(--brand);
+            text-decoration: none;
+            font-size: 14px;
+            margin-right: 15px;
+            font-weight: 500;
+        }
+
+        #authLinks a:hover {
+            text-decoration: underline;
+        }
+
+        #mobile-toggle {
+            position: fixed;
+            top: 14px;
+            left: 10px;
+            z-index: 1001;
+            display: none; /* Hidden by default */
+        }
+
+
+        .main {
+            flex: 1;
+            padding: 24px;
+            overflow-x: hidden;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .title {
+            text-align: left;
+            margin: 0;
+            font-size: 40px;
+            font-weight: 800;
+            color: #cfe5ff;
+        }
+
+        .btn {
+            height: 36px;
+            border-radius: 10px;
+            border: 1px solid #263048;
+            background: #12192b;
+            color: #e6edf6;
+            padding: 0 12px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .btn.danger {
+            background-color: var(--danger);
+            border-color: #c0392b;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .card {
+            background: linear-gradient(180deg, var(--panel), var(--panel-2));
+            border: 1px solid #212735;
+            border-radius: var(--radius);
+            padding: 0;
+            /* Changed padding */
+            overflow: hidden;
+            /* For rounded corners on table */
+        }
+
+        /* --- HISTORY TABLE STYLES --- */
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .history-table th,
+        .history-table td {
+            padding: 12px 20px;
+            text-align: left;
+            border-bottom: 1px solid #202533;
+        }
+
+        .history-table th {
+            background-color: var(--panel-2);
+            font-weight: 600;
+            color: #e7ecf3;
+        }
+
+        .history-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .history-table td {
+            color: var(--muted);
+        }
+
+        .history-table td:nth-child(2) {
+            color: var(--brand);
+        }
+
+        /* New styles for the login prompt */
+        .login-prompt {
+            text-align: center;
+            padding: 80px 20px;
+        }
+
+        .login-prompt .title {
+            text-align: center;
+        }
+
+        .login-prompt p {
+            font-size: 1.1rem;
+            color: var(--muted);
+            max-width: 500px;
+            margin: 15px auto 30px;
+        }
+
+        .login-prompt .navbtn {
+            display: inline-flex;
+            width: auto;
+            padding: 0 25px;
+        }
+
+        .login-prompt .navbtn.primary {
+            background-color: var(--brand);
+            color: #fff;
+        }
+        
+        @media (max-width: 768px) {
+            #mobile-toggle {
+                display: flex;
+            }
+            .wrap {
+                display: block;
+            }
+            .sidebar {
+                position: fixed;
+                width: 220px;
+                transform: translateX(-100%);
+                transition: transform 0.3s ease-in-out;
+                align-items: flex-start;
+            }
+            .sidebar.is-open {
+                transform: translateX(0);
+            }
+            .sidebar.is-open .brand span,
+            .sidebar.is-open .navbtn span {
+                display: inline;
+            }
+             .sidebar.is-open .auth-status {
+                display: block;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="mobile-toggle" class="brand">MAE</div>
+    <div class="wrap">
+
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="brand" id="toggleSidebar">MAE <span>MORPH-AI-ERA</span></div>
+            <nav class="nav">
+                <a href="dashboard.html" class="navbtn"><i class="fa-solid fa-gauge-high"></i><span>Dashboard</span></a>
+                <a href="analytics.html" class="navbtn"><i class="fa-solid fa-chart-line"></i><span>Analytics</span></a>
+                <a href="history.html" class="navbtn"><i class="fa-regular fa-clock"></i><span>History</span></a>
+            </nav>
+            <div class="spacer"></div>
+            <nav class="nav">
+                <a href="settings.html" class="navbtn" style="text-decoration: none;"><i
+                        class="fa-solid fa-gear"></i><span>Settings</span></a>
+                <a href="profile.html" class="navbtn" style="text-decoration: none;"><i
+                        class="fa-regular fa-user"></i><span>Profile</span>
+                </a>
+            </nav>
+
+            <div class="auth-status">
+                <p id="userStatus">Loading status...</p>
+                <div id="authLinks"></div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main" id="main-content">
+            <div class="header">
+                <h1 class="title">Action History</h1>
+                <button id="clearHistoryBtn" class="btn danger">Clear History</button>
+            </div>
+
+            <section class="card">
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>Timestamp</th>
+                            <th>User</th>
+                            <th>Action</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history-body">
+                        <!-- History rows will be dynamically inserted here -->
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // --- Sidebar Logic ---
+        function setupSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const desktopToggle = document.getElementById('toggleSidebar');
+            const mobileToggle = document.getElementById('mobile-toggle');
+
+            desktopToggle.addEventListener('click', () => {
+                if (window.innerWidth > 768) {
+                    sidebar.classList.toggle('expanded');
+                } else {
+                    sidebar.classList.remove('is-open');
+                }
+            });
+
+            mobileToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('is-open');
+            });
+
+            document.addEventListener('click', (e) => {
+                if (window.innerWidth <= 768 && sidebar.classList.contains('is-open')) {
+                    if (!sidebar.contains(e.target) && e.target !== mobileToggle) {
+                        sidebar.classList.remove('is-open');
+                    }
+                }
+            });
+
+            sidebar.querySelectorAll('.navbtn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    if (window.innerWidth <= 768) {
+                        sidebar.classList.remove('is-open');
+                    }
+                });
+            });
+        }
+
+
+        // --- Auth Logic (Simulated) ---
+        function checkLoginStatus() {
+            const authLinksDiv = document.getElementById('authLinks');
+            const userStatusP = document.getElementById('userStatus');
+            const isLoggedIn = false; // <<< In a real app, this value would come from your server
+            const username = "DemoUser";
+
+            if (isLoggedIn) {
+                userStatusP.textContent = `Logged in as: ${username}`;
+                authLinksDiv.innerHTML = `<a href="#">Log Out</a>`;
+            } else {
+                userStatusP.textContent = 'Using as: Guest';
+                authLinksDiv.innerHTML = `<a href="/login.html">Login</a> <a href="/signup.html">Sign Up</a>`;
+            }
+            return isLoggedIn;
+        }
+
+        // --- History Display Logic ---
+        const historyBody = document.getElementById('history-body');
+
+        function displayHistory() {
+            historyBody.innerHTML = ''; // Clear existing table
+            try {
+                const history = JSON.parse(localStorage.getItem('dashboardHistory')) || [];
+
+                if (history.length === 0) {
+                    const row = historyBody.insertRow();
+                    const cell = row.insertCell();
+                    cell.colSpan = 4;
+                    cell.textContent = 'No history recorded yet.';
+                    cell.style.textAlign = 'center';
+                    cell.style.padding = '20px';
+                    return;
+                }
+
+                history.forEach(entry => {
+                    const row = historyBody.insertRow();
+                    const time = new Date(entry.timestamp);
+
+                    row.insertCell().textContent = time.toLocaleString();
+                    row.insertCell().textContent = entry.user;
+                    row.insertCell().textContent = entry.action;
+                    row.insertCell().textContent = entry.details;
+                });
+            } catch (e) {
+                console.error("Failed to display history:", e);
+                const row = historyBody.insertRow();
+                const cell = row.insertCell();
+                cell.colSpan = 4;
+                cell.textContent = 'Error loading history data.';
+                cell.style.textAlign = 'center';
+            }
+        }
+
+        function showLoginPrompt() {
+            const mainContent = document.getElementById('main-content');
+            mainContent.innerHTML = `
+                <div class="login-prompt">
+                    <h1 class="title">Login Required</h1>
+                    <p>
+                        You must be logged in to view your action history. Please log in or create an account to continue.
+                    </p>
+                    <div>
+                        <a href="/login.html" class="navbtn primary">Login</a>
+                        <a href="/signup.html" class="navbtn">Sign Up</a>
+                    </div>
+                </div>
+            `;
+        }
+
+
+        // --- Initial Load ---
+        (function () {
+            setupSidebar();
+            const isLoggedIn = checkLoginStatus();
+
+            if (isLoggedIn) {
+                displayHistory();
+                document.getElementById('clearHistoryBtn').addEventListener('click', () => {
+                    // Use a simple confirm dialog. In a real app, a custom modal is better.
+                    if (window.confirm('Are you sure you want to clear all history? This cannot be undone.')) {
+                        localStorage.removeItem('dashboardHistory');
+                        displayHistory(); // Refresh the table
+                    }
+                });
+            } else {
+                showLoginPrompt();
+            }
+        })();
+    </script>
+</body>
+
+</html>
+
