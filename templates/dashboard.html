@@ -456,15 +456,14 @@
         <aside class="sidebar" id="sidebar">
             <div class="brand" id="toggleSidebar">MAE <span>MORPH-AI-ERA</span></div>
             <nav class="nav">
-                <a href="dashboard.html" class="navbtn"><i class="fa-solid fa-gauge-high"></i><span>Dashboard</span></a>
-
-                <a href="analytics.html" class="navbtn"><i class="fa-solid fa-chart-line"></i><span>Analytics</span></a>
-                <a href="history.html" class="navbtn"><i class="fa-regular fa-clock"></i><span>History</span></a>
+                <a href="/dashboard" class="navbtn"><i class="fa-solid fa-gauge-high"></i><span>Dashboard</span></a>
+                <a href="/analytics" class="navbtn"><i class="fa-solid fa-chart-line"></i><span>Analytics</span></a>
+                <a href="/history" class="navbtn"><i class="fa-regular fa-clock"></i><span>History</span></a>
             </nav>
             <div class="spacer"></div>
             <nav class="nav">
-                <a href="settings.html" class="navbtn"><i class="fa-solid fa-gear"></i><span>Settings</span></a>
-                <a href="profile.html" class="navbtn"><i class="fa-regular fa-user"></i><span>Profile</span>
+                <a href="/settings" class="navbtn"><i class="fa-solid fa-gear"></i><span>Settings</span></a>
+                <a href="/profile" class="navbtn"><i class="fa-regular fa-user"></i><span>Profile</span>
                 </a>
             </nav>
 
@@ -688,7 +687,30 @@
             </section>
         </main>
     </div>
+    <script>
+        async function loadPage(url) {
+            try {
+                // Fetch the new HTML content from your server
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error("Page not found");
+                }
+                const newContent = await response.text();
 
+                // Find your main content area and replace its HTML
+                const mainContent = document.getElementById('main-content');
+                mainContent.innerHTML = newContent;
+
+                // If the loaded content has its own scripts, you might need to evaluate them
+                // This is an advanced topic, but keep it in mind.
+
+            } catch (error) {
+                console.error('Failed to load page:', error);
+                const mainContent = document.getElementById('main-content');
+                mainContent.innerHTML = '<h1>Error: Could not load page.</h1>';
+            }
+        }
+    </script>
     <script>
         // --- Sidebar, Auth & General Setup ---
         const $ = q => document.querySelector(q);
@@ -1205,10 +1227,10 @@
     </script>
 
     <div id="focus-modal" class="modal">
-    <div class="modal-content"><span id="close-modal" class="close-btn">&times;</span>
-        <div id="focus-plot"></div>
+        <div class="modal-content"><span id="close-modal" class="close-btn">&times;</span>
+            <div id="focus-plot"></div>
+        </div>
     </div>
-</div>
 </body>
 
 </html>
