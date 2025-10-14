@@ -1,11 +1,15 @@
-# requirements.txt
-
 # FastAPI and Server
 fastapi>=0.110.0
 uvicorn[standard]>=0.29.0
 gunicorn>=22.0.0
 python-multipart>=0.0.9
+python-dotenv
+Jinja2
+requests
+
+# Google Authentication
 google-auth
+
 # Data Handling
 pandas>=2.2.3
 numpy>=1.26.4
