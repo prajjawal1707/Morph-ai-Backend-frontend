@@ -445,6 +445,18 @@
                 display: block;
             }
         }
+
+        .card-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .card-controls .select {
+            flex: 1;
+            height: 30px;
+            font-size: 12px;
+        }
     </style>
 </head>
 
@@ -748,7 +760,41 @@
                     }
                 });
             });
+        }// --- Core Functions ---
+        function setupSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const desktopToggle = document.getElementById('toggleSidebar');
+            const mobileToggle = document.getElementById('mobile-toggle');
+
+            desktopToggle.addEventListener('click', () => {
+                if (window.innerWidth > 768) {
+                    sidebar.classList.toggle('expanded');
+                } else {
+                    sidebar.classList.remove('is-open');
+                }
+            });
+
+            mobileToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('is-open');
+            });
+
+            document.addEventListener('click', (e) => {
+                if (window.innerWidth <= 768 && sidebar.classList.contains('is-open')) {
+                    if (!sidebar.contains(e.target) && e.target !== mobileToggle) {
+                        sidebar.classList.remove('is-open');
+                    }
+                }
+            });
+
+            sidebar.querySelectorAll('.navbtn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    if (window.innerWidth <= 768) {
+                        sidebar.classList.remove('is-open');
+                    }
+                });
+            });
         }
+
         function checkLoginStatus() {
             const authLinksDiv = document.getElementById('authLinks');
             const userStatusP = document.getElementById('userStatus');
@@ -760,7 +806,7 @@
                 authLinksDiv.innerHTML = `<a href="#">Log Out</a>`;
             } else {
                 userStatusP.textContent = 'Using as: Guest';
-                authLinksDiv.innerHTML = `<a href="/login.html">Login</a> <a href="/signup.html">Sign Up</a>`;
+                authLinksDiv.innerHTML = `<a href="/login">Login</a> <a href="/signup">Sign Up</a>`;
             }
         }
 
@@ -799,7 +845,6 @@
 
 
 
-
         function updateCards() {
             for (let i = 1; i <= 4; i++) {
                 const metric = $(`#metric-${i}`).value;
@@ -828,9 +873,6 @@
             }
             logHistory("Update Cards", "Manually refreshed KPI cards");
         }
-
-
-
 
 
 
@@ -1137,7 +1179,7 @@
             // This part is new:
             $$('.card-metric-select').forEach(sel => sel.innerHTML = numericOptions);
 
-            // Set defaults
+            // Set defaults for the new cards
             if (HEADERS.includes('Sales')) $('#metric-1').value = 'Sales';
             if (HEADERS.includes('Profit')) {
                 $('#metric-2').value = 'Profit';
@@ -1184,9 +1226,10 @@
         }
 
         // --- Initial Load ---
+        // --- Initial Load ---
         (function () {
-            setupSidebar();
-            checkLoginStatus();
+            setupSidebar(); // <-- ADD THIS LINE
+            checkLoginStatus(); // <-- ADD THIS LINE TOO
 
             $('#fileInput').addEventListener('change', (e) => {
                 const file = e.target.files[0];
@@ -1202,27 +1245,22 @@
                 reader.readAsText(file);
             });
 
-            // Event Listeners
+            // --- UPDATED Event Listeners ---
             $('#btnUpdate').addEventListener('click', drawMain);
-            $('#btnCalc').addEventListener('click', loadSummary);
+            $('#btnCalc').addEventListener('click', updateCards);
             $$('#u-type, #u-metric').forEach(el => el.addEventListener('change', drawMain));
             $$('#st-type, #st-metric').forEach(el => el.addEventListener('change', drawSalesTrend));
             $$('#pt-type, #pt-metric').forEach(el => el.addEventListener('change', drawProfitTrend));
             $$('#ovl-type-a, #ovl-type-b').forEach(el => el.addEventListener('change', drawOverlay));
             $('#sc-refresh').addEventListener('click', drawScatter);
-
-
-            // This listener was added:
             $$('.card-metric-select, .card-agg-select').forEach(el => el.addEventListener('change', updateCards));
 
-            // And the listener for the "Calculate Metrics" button was changed to this:
-            $('#btnCalc').addEventListener('click', updateCards);
-
-
-
-            const defaultCSV = `Date,Region,Product,Sales,Profit,Units_Sold\n2023-01-15,North,Widgets,1500,300,15\n2024-01-20,North,Gadgets,1100,180,22\n2023-02-10,South,Widgets,2200,450,22\n2024-03-12,West,Widgets,1950,400,18`;
-            parseCSV(defaultCSV);
-            refreshAll();
+            // --- Initial page load message ---
+            showPlotMessage('main-plot', 'Please upload a CSV file to get started.');
+            showPlotMessage('sales-trend', 'Waiting for data...');
+            showPlotMessage('profit-trend', 'Waiting for data...');
+            showPlotMessage('overlay-plot', 'Waiting for data...');
+            showPlotMessage('scatter-plot', 'Waiting for data...');
         })();
     </script>
 

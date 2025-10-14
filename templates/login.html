@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -14,6 +16,7 @@
             height: 100vh;
             margin: 0;
         }
+
         .login-container {
             background-color: #ffffff;
             padding: 40px;
@@ -23,23 +26,29 @@
             max-width: 400px;
             text-align: center;
         }
+
         h2 {
             margin-top: 0;
             margin-bottom: 24px;
             color: #1c1e21;
             font-size: 24px;
         }
+
         .input-group {
             margin-bottom: 16px;
         }
-        input[type="email"], input[type="password"] {
+
+        input[type="email"],
+        input[type="password"] {
             width: 100%;
             padding: 12px;
             border: 1px solid #dddfe2;
             border-radius: 6px;
-            box-sizing: border-box; /* Ensures padding doesn't affect width */
+            box-sizing: border-box;
+            /* Ensures padding doesn't affect width */
             font-size: 16px;
         }
+
         button[type="submit"] {
             width: 100%;
             padding: 12px;
@@ -52,9 +61,11 @@
             cursor: pointer;
             transition: background-color 0.2s;
         }
+
         button[type="submit"]:hover {
             background-color: #166fe5;
         }
+
         .divider {
             display: flex;
             align-items: center;
@@ -62,17 +73,22 @@
             color: #8d949e;
             margin: 20px 0;
         }
-        .divider::before, .divider::after {
+
+        .divider::before,
+        .divider::after {
             content: '';
             flex: 1;
             border-bottom: 1px solid #ccd0d5;
         }
+
         .divider:not(:empty)::before {
             margin-right: .25em;
         }
+
         .divider:not(:empty)::after {
             margin-left: .25em;
         }
+
         .google-btn {
             display: flex;
             align-items: center;
@@ -89,28 +105,34 @@
             text-decoration: none;
             transition: background-color 0.2s, border-color 0.2s;
         }
+
         .google-btn:hover {
             background-color: #f8f9fa;
             border-color: #c6c9cc;
         }
+
         .google-btn img {
             width: 20px;
             height: 20px;
             margin-right: 12px;
         }
+
         .signup-link {
             margin-top: 20px;
             font-size: 14px;
         }
+
         .signup-link a {
             color: #1877f2;
             text-decoration: none;
         }
+
         .signup-link a:hover {
             text-decoration: underline;
         }
     </style>
 </head>
+
 <body>
     <div class="login-container">
         <h2>Log In</h2>
@@ -122,16 +144,50 @@
                 <input type="password" name="password" placeholder="Password" required>
             </div>
             <button type="submit">Log In</button>
+
         </form>
-        
+
         <div class="divider">OR</div>
+        <div id="g_id_onload" data-client_id="312955081543-k2ev0ahe3v8pcbo1i7mhfsalt0cr6vqs.apps.googleusercontent.com"
+            data-callback="handleCredentialResponse">
+        </div>
+        <div class="g_id_signin" data-type="standard"> </div>
 
-        <a href="/auth/google" class="google-btn">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google logo">
-            Sign in with Google
-        </a>
-
-        <p class="signup-link">Don't have an account? <a href="/signup.html">Sign Up</a></p>
+        <p class="signup-link">Don't have an account? <a href="/signup">Sign Up</a></p>
     </div>
+
+    <script>
+        // This function is called by Google when the user successfully signs in
+        async function handleCredentialResponse(response) {
+            // The 'credential' is a JSON Web Token (JWT) that contains the user's info
+            const id_token = response.credential;
+
+            // ==> SEND THIS TOKEN TO YOUR BACKEND FOR VERIFICATION <==
+            try {
+                const backendResponse = await fetch("/api/auth/google", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ token: id_token }),
+                });
+
+                if (!backendResponse.ok) {
+                    throw new Error('Login failed. Please try again.');
+                }
+
+                const data = await backendResponse.json();
+                console.log('Login successful:', data);
+
+                // Redirect to the dashboard on successful login
+                window.location.href = '/dashboard';
+
+            } catch (error) {
+                console.error('Error during backend verification:', error);
+                alert('An error occurred during login. Please try again.');
+            }
+        }
+    </script>
 </body>
+
 </html>

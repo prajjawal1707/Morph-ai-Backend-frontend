@@ -207,7 +207,8 @@
             top: 14px;
             left: 10px;
             z-index: 1001;
-            display: none; /* Hidden by default */
+            display: none;
+            /* Hidden by default */
         }
 
 
@@ -318,14 +319,16 @@
             background-color: var(--brand);
             color: #fff;
         }
-        
+
         @media (max-width: 768px) {
             #mobile-toggle {
                 display: flex;
             }
+
             .wrap {
                 display: block;
             }
+
             .sidebar {
                 position: fixed;
                 width: 220px;
@@ -333,14 +336,17 @@
                 transition: transform 0.3s ease-in-out;
                 align-items: flex-start;
             }
+
             .sidebar.is-open {
                 transform: translateX(0);
             }
+
             .sidebar.is-open .brand span,
             .sidebar.is-open .navbtn span {
                 display: inline;
             }
-             .sidebar.is-open .auth-status {
+
+            .sidebar.is-open .auth-status {
                 display: block;
             }
         }
@@ -355,15 +361,15 @@
         <aside class="sidebar" id="sidebar">
             <div class="brand" id="toggleSidebar">MAE <span>MORPH-AI-ERA</span></div>
             <nav class="nav">
-                <a href="dashboard.html" class="navbtn"><i class="fa-solid fa-gauge-high"></i><span>Dashboard</span></a>
-                <a href="analytics.html" class="navbtn"><i class="fa-solid fa-chart-line"></i><span>Analytics</span></a>
-                <a href="history.html" class="navbtn"><i class="fa-regular fa-clock"></i><span>History</span></a>
+                <a href="/dashboard" class="navbtn"><i class="fa-solid fa-gauge-high"></i><span>Dashboard</span></a>
+                <a href="/analytics" class="navbtn"><i class="fa-solid fa-chart-line"></i><span>Analytics</span></a>
+                <a href="/history" class="navbtn"><i class="fa-regular fa-clock"></i><span>History</span></a>
             </nav>
             <div class="spacer"></div>
             <nav class="nav">
-                <a href="settings.html" class="navbtn" style="text-decoration: none;"><i
+                <a href="/settings" class="navbtn" style="text-decoration: none;"><i
                         class="fa-solid fa-gear"></i><span>Settings</span></a>
-                <a href="profile.html" class="navbtn" style="text-decoration: none;"><i
+                <a href="/profile" class="navbtn" style="text-decoration: none;"><i
                         class="fa-regular fa-user"></i><span>Profile</span>
                 </a>
             </nav>
@@ -437,6 +443,7 @@
 
 
         // --- Auth Logic (Simulated) ---
+        // --- Auth Logic (Simulated) ---
         function checkLoginStatus() {
             const authLinksDiv = document.getElementById('authLinks');
             const userStatusP = document.getElementById('userStatus');
@@ -448,7 +455,8 @@
                 authLinksDiv.innerHTML = `<a href="#">Log Out</a>`;
             } else {
                 userStatusP.textContent = 'Using as: Guest';
-                authLinksDiv.innerHTML = `<a href="/login.html">Login</a> <a href="/signup.html">Sign Up</a>`;
+                // CORRECTED line below
+                authLinksDiv.innerHTML = `<a href="/login">Login</a> <a href="/signup">Sign Up</a>`;
             }
             return isLoggedIn;
         }
@@ -499,8 +507,8 @@
                         You must be logged in to view your action history. Please log in or create an account to continue.
                     </p>
                     <div>
-                        <a href="/login.html" class="navbtn primary">Login</a>
-                        <a href="/signup.html" class="navbtn">Sign Up</a>
+                        <a href="/login" class="navbtn primary">Login</a>
+                        <a href="/signup" class="navbtn">Sign Up</a>
                     </div>
                 </div>
             `;
@@ -529,4 +537,3 @@
 </body>
 
 </html>
-
