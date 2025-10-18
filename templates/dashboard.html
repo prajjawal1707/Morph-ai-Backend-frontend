@@ -795,20 +795,35 @@
             });
         }
 
-        function checkLoginStatus() {
-            const authLinksDiv = document.getElementById('authLinks');
-            const userStatusP = document.getElementById('userStatus');
-            const isLoggedIn = false;
-            const username = "DemoUser";
+        // THIS IS YOUR NEW, CORRECT checkLoginStatus FUNCTION
 
-            if (isLoggedIn) {
-                userStatusP.textContent = `Logged in as: ${username}`;
-                authLinksDiv.innerHTML = `<a href="#">Log Out</a>`;
-            } else {
-                userStatusP.textContent = 'Using as: Guest';
+        async function checkLoginStatus() {
+            const userStatusP = document.getElementById('userStatus');
+            const authLinksDiv = document.getElementById('authLinks');
+
+            try {
+                // This line calls your Python backend
+                const response = await fetch('/users/me');
+                const user = await response.json();
+
+                if (user.loggedIn) {
+                    userStatusP.textContent = `Logged in as: ${user.username}`;
+                    // Corrected logout link
+                    authLinksDiv.innerHTML = `<a href="/logout">Log Out</a>`;
+                } else {
+                    userStatusP.textContent = 'Using as: Guest';
+                    authLinksDiv.innerHTML = `<a href="/login">Login</a> <a href="/signup">Sign Up</a>`;
+                }
+            } catch (error) {
+                console.error('Error checking login status:', error);
+                userStatusP.textContent = 'Error loading status';
                 authLinksDiv.innerHTML = `<a href="/login">Login</a> <a href="/signup">Sign Up</a>`;
             }
         }
+
+        // Make sure this function is called when your page loads.
+        // You already have a line like this in your code, just ensure it's there.
+        checkLoginStatus();
 
         // --- Data & History Management ---
         let DATASET = [];
@@ -1190,6 +1205,29 @@
             if (HEADERS.includes('Profit')) $('#pt-metric').value = 'Profit';
         }
 
+        // This function will run on every page load to check the real login status
+        async function updateUserStatus() {
+            const authLinksDiv = document.getElementById('authLinks');
+            const userStatusP = document.getElementById('userStatus');
+
+            try {
+                const response = await fetch("/users/me");
+                const data = await response.json();
+
+                if (data.loggedIn) {
+                    userStatusP.textContent = `Logged in as: ${data.username}`;
+                    authLinksDiv.innerHTML = `<a href="/logout">Log Out</a>`;
+                } else {
+                    userStatusP.textContent = 'Using as: Guest';
+                    authLinksDiv.innerHTML = `<a href="/login">Login</a> <a href="/signup">Sign Up</a>`;
+                }
+            } catch (error) {
+                console.error("Failed to check user status:", error);
+                userStatusP.textContent = 'Status unavailable';
+                authLinksDiv.innerHTML = `<a href="/login">Login</a>`;
+            }
+        }
+
         function drawMain() {
             drawChart('main-plot', $('#u-type').value, $('#u-metric').value);
             logHistory("Update Chart", `Main chart to ${$('#u-type').value} for ${$('#u-metric').value}`);
@@ -1229,7 +1267,7 @@
         // --- Initial Load ---
         (function () {
             setupSidebar(); // <-- ADD THIS LINE
-            checkLoginStatus(); // <-- ADD THIS LINE TOO
+            updateUserStatus(); // <-- ADD THIS LINE TOO
 
             $('#fileInput').addEventListener('change', (e) => {
                 const file = e.target.files[0];
@@ -1256,11 +1294,11 @@
             $$('.card-metric-select, .card-agg-select').forEach(el => el.addEventListener('change', updateCards));
 
             // --- Initial page load message ---
-            showPlotMessage('main-plot', 'Please upload a CSV file to get started.');
-            showPlotMessage('sales-trend', 'Waiting for data...');
-            showPlotMessage('profit-trend', 'Waiting for data...');
-            showPlotMessage('overlay-plot', 'Waiting for data...');
-            showPlotMessage('scatter-plot', 'Waiting for data...');
+            showPlotMessage('main-plot', '..');
+            showPlotMessage('sales-trend', '...');
+            showPlotMessage('profit-trend', '...');
+            showPlotMessage('overlay-plot', '..');
+            showPlotMessage('scatter-plot', '...');
         })();
     </script>
 

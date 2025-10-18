@@ -136,6 +136,7 @@
 <body>
     <div class="login-container">
         <h2>Log In</h2>
+        <div id="message-container" style="color: red; margin-bottom: 16px;"></div>
         <form action="/login" method="POST">
             <div class="input-group">
                 <input type="email" name="email" placeholder="Email" required>
@@ -158,35 +159,42 @@
 
     <script>
         // This function is called by Google when the user successfully signs in
-        async function handleCredentialResponse(response) {
-            // The 'credential' is a JSON Web Token (JWT) that contains the user's info
+        // This function is called by Google when the user successfully signs in
+        function handleCredentialResponse(response) {
             const id_token = response.credential;
 
-            // ==> SEND THIS TOKEN TO YOUR BACKEND FOR VERIFICATION <==
-            try {
-                const backendResponse = await fetch("/api/auth/google", {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ token: id_token }),
-                });
+            // Create a hidden form to send the token to the backend
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/auth/google/callback';
+            form.style.display = 'none';
 
-                if (!backendResponse.ok) {
-                    throw new Error('Login failed. Please try again.');
-                }
+            const hiddenInput = document.createElement('input');
+            hiddenInput.name = 'credential';
+            hiddenInput.value = id_token;
+            form.appendChild(hiddenInput);
 
-                const data = await backendResponse.json();
-                console.log('Login successful:', data);
-
-                // Redirect to the dashboard on successful login
-                window.location.href = '/dashboard';
-
-            } catch (error) {
-                console.error('Error during backend verification:', error);
-                alert('An error occurred during login. Please try again.');
-            }
+            document.body.appendChild(form);
+            form.submit();
         }
+    </script>
+
+    <script>
+        window.onload = function () {
+            const messageContainer = document.getElementById('message-container');
+            const params = new URLSearchParams(window.location.search);
+
+            const error = params.get('error');
+            const msg = params.get('msg');
+
+            if (error) {
+                messageContainer.textContent = error;
+                messageContainer.style.color = 'red';
+            } else if (msg) {
+                messageContainer.textContent = msg;
+                messageContainer.style.color = 'green';
+            }
+        };
     </script>
 </body>
 
