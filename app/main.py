@@ -2,7 +2,7 @@
 
 from dotenv import load_dotenv
 load_dotenv()
-
+from app.api import upload, chart, auth, credits # <-- ADD 'credits' HERE
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse, HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -41,8 +41,9 @@ app.include_router(chart.router, prefix="/api")
 # Top-level routes for authentication (login, signup, logout)
 app.include_router(auth.router) # <-- CORRECTED: The "/api" prefix is removed
 
-#  4. CORE API ENDPOINTS
 
+app.include_router(credits.router, prefix="/api") # <-- ADD THIS LINE
+#  4. CORE API ENDPOINTS
 @app.get("/api/summary")
 def get_summary():
     """
@@ -114,3 +115,26 @@ async def get_login(request: Request):
 @app.get("/signup", response_class=HTMLResponse)
 async def get_signup(request: Request):
     return templates.TemplateResponse("signup.html", {"request": request})
+# In backend/main.py
+
+# ... (all your other code and routes)
+
+@app.get("/terms", response_class=HTMLResponse)
+async def get_terms_page(request: Request):
+    return templates.TemplateResponse("terms.html", {"request": request})
+
+@app.get("/privacy", response_class=HTMLResponse)
+async def get_privacy_page(request: Request):
+    return templates.TemplateResponse("privacy.html", {"request": request})
+
+@app.get("/refunds", response_class=HTMLResponse)
+async def get_refunds_page(request: Request):
+    return templates.TemplateResponse("refunds.html", {"request": request})
+
+@app.get("/shipping", response_class=HTMLResponse)
+async def get_shipping_page(request: Request):
+    return templates.TemplateResponse("shipping.html", {"request": request})
+
+@app.get("/contact", response_class=HTMLResponse)
+async def get_contact_page(request: Request):
+    return templates.TemplateResponse("contact.html", {"request": request})

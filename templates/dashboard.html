@@ -107,6 +107,7 @@
             min-width: 44px;
             /* Changed from width */
             height: 44px;
+            /* width: 100px; */
             border-radius: 12px;
             background: #0c1a33;
             border: 1px solid #1b2a44;
@@ -698,7 +699,28 @@
                 </div>
             </section>
         </main>
+        <!-- <div id="focus-modal" class="modal">
+            <div class="modal-content"><span id="close-modal" class="close-btn">&times;</span>
+                <div id="focus-plot"></div>
+            </div>
+        </div> -->
+
+
     </div>
+    <footer
+        style="text-align: center; padding: 15px 20px; ; background-color: #11151f; font-size: 12px; color: #595959;">
+        <p>&copy; 2025 Morph-Ai-Era. All Rights Reserved.</p>
+        <div class="footer-links" style="margin-top: 5px;">
+            <a href="/terms" style="color: #3b3b3c; margin: 0 10px;">Terms & Conditions</a> |
+            <a href="/privacy" style="color: #414152; margin: 0 10px;">Privacy Policy</a> |
+            <a href="/refunds" style="color: #4d4d90; margin: 0 10px;">Refund Policy</a> |
+            <a href="/shipping" style="color: #3b3bba; margin: 0 10px;">Shipping Policy</a> |
+            <a href="/contact" style="color: #0404d2; margin: 0 10px;">Contact Us</a>
+        </div>
+    </footer>
+
+
+
     <script>
         async function loadPage(url) {
             try {
@@ -760,41 +782,7 @@
                     }
                 });
             });
-        }// --- Core Functions ---
-        function setupSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const desktopToggle = document.getElementById('toggleSidebar');
-            const mobileToggle = document.getElementById('mobile-toggle');
-
-            desktopToggle.addEventListener('click', () => {
-                if (window.innerWidth > 768) {
-                    sidebar.classList.toggle('expanded');
-                } else {
-                    sidebar.classList.remove('is-open');
-                }
-            });
-
-            mobileToggle.addEventListener('click', () => {
-                sidebar.classList.toggle('is-open');
-            });
-
-            document.addEventListener('click', (e) => {
-                if (window.innerWidth <= 768 && sidebar.classList.contains('is-open')) {
-                    if (!sidebar.contains(e.target) && e.target !== mobileToggle) {
-                        sidebar.classList.remove('is-open');
-                    }
-                }
-            });
-
-            sidebar.querySelectorAll('.navbtn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    if (window.innerWidth <= 768) {
-                        sidebar.classList.remove('is-open');
-                    }
-                });
-            });
         }
-
         // THIS IS YOUR NEW, CORRECT checkLoginStatus FUNCTION
 
         async function checkLoginStatus() {
@@ -820,9 +808,6 @@
                 authLinksDiv.innerHTML = `<a href="/login">Login</a> <a href="/signup">Sign Up</a>`;
             }
         }
-
-        // Make sure this function is called when your page loads.
-        // You already have a line like this in your code, just ensure it's there.
         checkLoginStatus();
 
         // --- Data & History Management ---
@@ -921,118 +906,6 @@
                 return { labels: DATASET.map(row => row[labelCol]), values: DATASET.map(row => row[metric]) };
             }
         }
-        // function generateTracesAndLayout(type, metric) {
-        //     if (!metric) { return { error: 'Please select a metric.' }; }
-        //     let traces = [];
-        //     let layout = plotlyLayout(metric);
-        //     try {
-        //         switch (type) {
-        //             case 'line': case 'bar': case 'area': {
-        //                 const { labels, values } = getSeries(metric);
-        //                 if (type === 'area') {
-        //                     traces.push({ type: 'scatter', x: labels, y: values, name: metric, mode: 'lines', fill: 'tozeroy' });
-        //                 } else {
-        //                     traces.push({ type: type, x: labels, y: values, name: metric });
-        //                 }
-        //                 break;
-        //             }
-        //             case 'bar-h': {
-        //                 const { labels, values } = getSeries(metric);
-        //                 traces.push({ type: 'bar', x: values, y: labels, orientation: 'h', name: metric });
-        //                 break;
-        //             }
-        //             case 'stacked-bar':
-        //             case 'stacked-area': case 'clustered-column': case 'stacked-column': {
-        //                 if (!HEADERS.includes('Sales') || !HEADERS.includes('Profit')) { return { error: 'This chart requires "Sales" and "Profit" columns.' }; }
-        //                 const sales = getSeries('Sales'); const profit = getSeries('Profit');
-        //                 if (type === 'stacked-area') {
-        //                     traces.push({ type: 'scatter', x: sales.labels, y: sales.values, name: 'Sales', fill: 'tozeroy', mode: 'none' });
-        //                     traces.push({ type: 'scatter', x: profit.labels, y: profit.values, name: 'Profit', fill: 'tonexty', mode: 'none' });
-        //                 } else {
-        //                     traces.push({ type: 'bar', x: sales.labels, y: sales.values, name: 'Sales' });
-        //                     traces.push({ type: 'bar', x: profit.labels, y: profit.values, name: 'Profit' });
-        //                     layout.barmode = type.includes('stack') ? 'stack' : 'group';
-        //                     if (type === 'stacked-bar') { traces.forEach(t => t.orientation = 'h'); }
-        //                 }
-        //                 break;
-        //             }
-        //             case 'pie': case 'donut': {
-        //                 const { labels, values } = getSeries(metric);
-        //                 traces.push({ type: 'pie', labels, values, hole: type === 'donut' ? 0.5 : 0, textinfo: 'percent', insidetextorientation: 'radial' });
-        //                 break;
-        //             }
-        //             case 'scatter': case 'bubble': {
-        //                 if (!HEADERS.includes('Sales') || !HEADERS.includes('Profit')) { return { error: 'Requires "Sales" and "Profit" columns.' }; }
-        //                 const sales = getSeries('Sales'); const profit = getSeries('Profit');
-        //                 const bubbleSizes = type === 'bubble' ? profit.values.map(p => Math.max(Math.abs(p) / 50, 10)) : 12;
-        //                 traces.push({ type: 'scatter', x: sales.values, y: profit.values, mode: 'markers', marker: { size: bubbleSizes, color: profit.values, colorscale: 'Viridis', showscale: true } });
-        //                 layout.xaxis.title = 'Sales'; layout.yaxis.title = 'Profit';
-        //                 break;
-        //             }
-        //             case 'box': case 'violin': {
-        //                 const { values } = getSeries(metric);
-        //                 traces.push({ y: values, type: type, name: metric });
-        //                 break;
-        //             }
-        //             case 'treemap': case 'sunburst': {
-        //                 const cat1 = AVAILABLE_METRICS.categorical[0];
-        //                 const cat2 = AVAILABLE_METRICS.categorical[1];
-        //                 if (!cat1 || !cat2) { return { error: 'This chart requires at least two categorical columns.' }; }
-
-        //                 const hierarchy = DATASET.reduce((acc, row) => {
-        //                     const parent = row[cat1]; const child = row[cat2]; const value = row.Sales || 0;
-        //                     if (!acc[parent]) acc[parent] = { children: {}, total: 0 };
-        //                     acc[parent].children[child] = (acc[parent].children[child] || 0) + value;
-        //                     acc[parent].total += value;
-        //                     return acc;
-        //                 }, {});
-
-        //                 const labels = ['Total']; const parents = [''];
-        //                 const values = [Object.values(hierarchy).reduce((sum, p) => sum + p.total, 0)];
-
-        //                 for (const parent in hierarchy) {
-        //                     labels.push(parent); parents.push('Total'); values.push(hierarchy[parent].total);
-        //                     for (const child in hierarchy[parent].children) {
-        //                         labels.push(child); parents.push(parent); values.push(hierarchy[parent].children[child]);
-        //                     }
-        //                 }
-        //                 traces.push({ type: type, labels, parents, values, branchvalues: 'total' });
-        //                 break;
-        //             }
-        //             case 'heatmap': {
-        //                 const cat1 = AVAILABLE_METRICS.categorical[0];
-        //                 const cat2 = AVAILABLE_METRICS.categorical[1];
-        //                 if (!cat1 || !cat2) { return { error: 'Heatmap requires at least two categorical columns.' }; }
-        //                 const xLabels = [...new Set(DATASET.map(r => r[cat1]))];
-        //                 const yLabels = [...new Set(DATASET.map(r => r[cat2]))];
-        //                 const zValues = yLabels.map(y => xLabels.map(x => {
-        //                     const filtered = DATASET.filter(r => r[cat1] === x && r[cat2] === y);
-        //                     return filtered.reduce((sum, r) => sum + (r[metric] || 0), 0);
-        //                 }));
-        //                 traces.push({ x: xLabels, y: yLabels, z: zValues, type: 'heatmap', colorscale: 'Viridis' });
-        //                 break;
-        //             }
-        //             case 'choropleth': { return { error: `Map charts require specific geographical data (e.g., country codes) which was not found.` }; }
-        //             case 'decomposition-tree': { return { error: `Decomposition Tree is a placeholder for a complex custom visual.` }; }
-        //             case 'waterfall': case 'funnel': case 'gauge': {
-        //                 return { error: `The "${type}" chart requires specific data structures. This is a placeholder visual.` };
-        //             }
-        //             case 'combo': {
-        //                 if (!HEADERS.includes('Sales') || !HEADERS.includes('Profit')) { return { error: 'Combo chart requires "Sales" and "Profit" columns.' }; }
-        //                 const sales = getSeries('Sales'); const profit = getSeries('Profit');
-        //                 traces.push({ type: 'bar', x: sales.labels, y: sales.values, name: 'Sales' });
-        //                 traces.push({ type: 'scatter', mode: 'lines', x: profit.labels, y: profit.values, name: 'Profit', yaxis: 'y2' });
-        //                 layout.yaxis2 = { title: 'Profit', overlaying: 'y', side: 'right', showgrid: false, tickfont: { color: '#ff7f0e' } };
-        //                 break;
-        //             }
-        //             default: return { error: `Chart type "${type}" is not implemented.` };
-        //         }
-        //         return { traces, layout };
-        //     } catch (err) {
-        //         console.error(`Failed to generate chart type "${type}":`, err);
-        //         return { error: `Could not draw chart. The data might be in an incompatible format.` };
-        //     }
-        // }
 
         function generateTracesAndLayout(type, metric) {
             if (!metric) { return { error: 'Please select a metric.' }; }
@@ -1293,20 +1166,11 @@
             $('#sc-refresh').addEventListener('click', drawScatter);
             $$('.card-metric-select, .card-agg-select').forEach(el => el.addEventListener('change', updateCards));
 
-            // --- Initial page load message ---
-            showPlotMessage('main-plot', '..');
-            showPlotMessage('sales-trend', '...');
-            showPlotMessage('profit-trend', '...');
-            showPlotMessage('overlay-plot', '..');
-            showPlotMessage('scatter-plot', '...');
+            // const defaultCSV = `Date,Region,Product,Sales,Profit,Units_Sold\n2023-01-15,North,Widgets,1500,300,15\n2024-01-20,North,Gadgets,1100,180,22\n2023-02-10,South,Widgets,2200,450,22\n2024-03-12,West,Widgets,1950,400,18`;
+            parseCSV(defaultCSV);
+            refreshAll();
         })();
     </script>
-
-    <div id="focus-modal" class="modal">
-        <div class="modal-content"><span id="close-modal" class="close-btn">&times;</span>
-            <div id="focus-plot"></div>
-        </div>
-    </div>
 </body>
 
 </html>

@@ -48,7 +48,6 @@
 
 
 # app/api/chart.py
-
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from app.services.file_handler import get_dataframe
